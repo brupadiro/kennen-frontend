@@ -14,8 +14,17 @@
           <template v-slot:item.regarding="{ item }">
           <storeChipsStatusComponent :status="item.regarding"></storeChipsStatusComponent>
           </template>
+          <template v-slot:item.show="{ item }">
+          <v-btn color="secondary" fab small elevation="3" @click="showOrder(item)">
+            <v-icon color="BLACK">mdi-eye</v-icon>
+          </v-btn>
+        </template>
+
+
       </v-data-table>
     </v-card-text>
+    <storeOrderViewComponent :orderData="order" v-model="showOrderModal"></storeOrderViewComponent>
+
   </GeneralCardComponent>
 </template>
 
@@ -60,15 +69,32 @@
             align: 'left',
             sortable: true
           },
+          {
+            text: '',
+            value: 'show',
+            align: 'left',
+            sortable: true
+          },
+
+
         ],
         loading:false,
         data: [],
+        order:{},
+          showOrderModal: false
+
       }
     },
     mounted() {
       this.getStore()
     },
     methods: {
+      showOrder(item){
+        this.order = item
+        this.showOrderModal = true
+        console.log(this.showOrderModal)
+      },
+
       getOrderState(stateNumber) {
         switch (stateNumber) {
           case "0":

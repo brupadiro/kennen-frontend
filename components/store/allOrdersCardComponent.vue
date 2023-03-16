@@ -46,7 +46,7 @@
           </v-chip>
         </template>
         <template v-slot:item.show="{ item }">
-          <v-btn color="secondary" fab small elevation="3" @click="showOrder(item.id)">
+          <v-btn color="secondary" fab small elevation="3" @click="showOrder(item)">
             <v-icon color="BLACK">mdi-eye</v-icon>
           </v-btn>
         </template>
@@ -63,6 +63,7 @@
         </v-btn>
       </v-btn-toggle>
     </v-card-actions>
+    <storeOrderViewComponent :orderData="order" v-model="showOrderModal"></storeOrderViewComponent>
   </GeneralCardComponent>
 </template>
 
@@ -127,7 +128,8 @@
         ],
         loading:false,
         data: [],
-
+          order:{},
+          showOrderModal: false
 
       }
     },
@@ -135,7 +137,11 @@
       this.getAllOrders()
     },
     methods: {
-
+      showOrder(item){
+        this.order = item
+        this.showOrderModal = true
+        console.log(this.showOrderModal)
+      },
       getAllOrders() {
         this.loading = true
         this.data = []

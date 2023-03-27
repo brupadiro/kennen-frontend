@@ -61,6 +61,10 @@
                   <FormsFieldsSelectComponent label="Pais" v-model="company.country" label-color="white--text"
                     :items="['Espana']"></FormsFieldsSelectComponent>
                 </v-col>
+                <v-col class="col-12">
+                  <FormsFieldsTextComponent label="Aftership API KEY" v-model="company.aftership_api_key"></FormsFieldsTextComponent>
+                </v-col>
+
               </v-row>
             </v-card-text>
           </v-form>

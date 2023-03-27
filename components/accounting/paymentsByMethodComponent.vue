@@ -33,7 +33,7 @@
     methods: {
       async getIncome() {
         console.log(this.search.store)
-        await this.$axios.get(`/webservices/payments/${this.search.store}`, {
+        await this.$axios.get(`/webservices/payments/${this.search.store.name}`, {
           params: {
             ...this.search,
             method:'dayAndMethod'

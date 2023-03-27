@@ -9,7 +9,7 @@
         </template>
     </HeadersGeneralComponent>
     <v-row>
-          <v-col class="col-12 col-md-6" v-for="store in stores.data" :key="store.id">
+          <v-col class="col-md-12"  v-for="store in stores.data" :key="store.id">
             <storeCardsComponent :store="store"></storeCardsComponent>
           </v-col>
           <v-col class="col-md-4" v-if="stores.data.length == 0">
@@ -19,7 +19,6 @@
             </GeneralCardComponent>          
           </v-col>
           <v-col class="col-12">
-            <StoreAllOrdersCardComponent></StoreAllOrdersCardComponent>
           </v-col>
         </v-row>
 

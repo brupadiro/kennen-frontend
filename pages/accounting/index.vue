@@ -19,8 +19,10 @@
           </GeneralCardTitleComponent>
           <v-card-text>
             <v-row>
+              <v-col class="col-12 col-md-10">
+                <v-row>
               <v-col class="col-md-12 col-12">
-            <FormsFieldsSelectComponent  v-model="search.store" :items="storeList.data" item-value="id" item-text="name" label="Tienda">
+            <FormsFieldsSelectComponent  v-model="search.store" return-object :items="storeList.data" item-value="id" item-text="name" label="Tienda">
             </FormsFieldsSelectComponent>
           </v-col>
 
@@ -33,13 +35,24 @@
             </FormsFieldsTextComponent>
           </v-col>
         </v-row>
-
+               
+              </v-col>
+              <v-col class="col-md-2 col-12 d-flex justify-center align-center">
+          <v-btn fab class="primary white--text" @click="getData()">
+            <v-icon>mdi-filter</v-icon>
+          </v-btn>
+        </v-col>
+            </v-row>
           </v-card-text>
         </GeneralCardComponent>
       </v-col>
       <v-col class="col-12">
         <accountingCashFlowComponent :search="search"></accountingCashFlowComponent>
       </v-col>
+      <v-col class="col-12">
+        <accountingResumeComponent :search="search"></accountingResumeComponent>
+      </v-col>
+
     </v-row>
     <accountingCreatePaymentsComponent v-model="paymentsModal"></accountingCreatePaymentsComponent>
   </v-container>
@@ -75,9 +88,7 @@
           value: 'invoice'
         }],
         search:{
-          store:{
-            name:''
-          }
+          store:null
         },
         paymentsModal:false,
         storeList:{
@@ -91,11 +102,15 @@
       this.getStores()
     },
     methods:{
+      async getData() {
+        this.$root.$emit('refresh')
+      },
       async getStores() {
         this.storeList = await this.$store.dispatch('store/findAll', {
           company: this.$auth.user.company.id
         })
         this.search.store = this.storeList.data[0]?.id
+        this.$root.$emit('refresh')
       },
     }
   }

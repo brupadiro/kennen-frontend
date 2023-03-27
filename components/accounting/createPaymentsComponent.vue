@@ -11,12 +11,7 @@
         <v-form ref="form">
           <v-row>
             <v-col class="col-12">
-              <FormsFieldsSelectComponent v-model="payment.type" label="Tipo" :rules="rules.required" :items="[
-                        {text:'Impuestos',value:'Impuestos',},
-                        {text:'Facturas',value:'Facturas'},
-                        {text:'Pago a proveedores',value:'suppliers'},
-                        {text:'Sueldos',value:'sueldos'}
-                        ]">
+              <FormsFieldsSelectComponent v-model="payment.type" label="Tipo" :rules="rules.required" :items="itemsTypes">
               </FormsFieldsSelectComponent>
             </v-col>
             <v-col class="col-12">
@@ -69,9 +64,44 @@
     data() {
       return {
         snackErrorForm: false,
+        itemsTypes:[
+          {
+            text: 'COMISION',
+            value: 'COMISION'
+          },
+          {
+            text: 'PUBLI',
+            value: 'PUBLI'
+          },
+          {
+            text: 'SERVER',
+            value: 'SERVER'
+          },
+          {
+            text: 'REEMBOLSOS',
+            value: 'REEMBOLSOS'
+          },
+          {
+            text: 'PAGOS CHINO',
+            value: 'PAGOS_CHINO'
+          },
+
+          {
+            text: 'AT.CLIENTE',
+            value: 'AT_CLIENTE'
+          },
+          {
+            text: 'ABOGADA',
+            value: 'ABOGADA'
+          },
+          {
+            text: 'EXTRAS',
+            value: 'EXTRAS'
+          }],
+
         payment: {
-          type: 'Impuestos',
-          amount: null,
+          type: 'COMISION',
+          amount: 0,
           comments: null,
           status: 'payed',
           store: null
@@ -108,7 +138,13 @@
           data:this.payment
         })
           .then(()=>{
-            this.payment = {}
+            this.payment ={
+          type: 'COMISION',
+          amount: 0,
+          comments: null,
+          status: 'payed',
+          store: null
+        }
             this.$emit('input', false)
             this.$root.$emit('refresh')
           })

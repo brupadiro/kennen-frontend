@@ -87,15 +87,15 @@
           </v-card>
         </v-card-text>
         <v-card-text>
-            <generalCardComponent outlined>
+            <generalCardComponent outlined v-show="!loading">
                 <v-card-title class="primary white--text text-h6">Actualizar orden</v-card-title>
                 <v-card-text>
                     <v-row>
                         <v-col class="col-md-6 col-12">
-                            <FormsFieldsTextComponent label="Track id" v-model="updateOrder.track_id"></FormsFieldsTextComponent>
+                            <FormsFieldsTextComponent label="Track id" :disabled="Object.keys(order.extra).length != 0" v-model="dataOrder.tracking_number"></FormsFieldsTextComponent>
                         </v-col>
                         <v-col class="col-md-6 col-12">
-                            <FormsFieldsTextComponent label="Precio neto" v-model="updateOrder.net_price"></FormsFieldsTextComponent>
+                            <FormsFieldsTextComponent label="Precio neto" :disabled="Object.keys(order.extra).length != 0" v-model="dataOrder.net_price"></FormsFieldsTextComponent>
                         </v-col>
 
                     </v-row>
@@ -103,7 +103,7 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn  color="secondary" class="rounded-lg font-weight-bold black--text">Actualizar informacion</v-btn>
+                    <v-btn  color="secondary" v-show="Object.keys(order.extra).length == 0" class="rounded-lg font-weight-bold black--text" @click="updateOrder()">Actualizar informacion</v-btn>
                 </v-card-actions>
             </generalCardComponent>
         </v-card-text>
@@ -135,17 +135,30 @@
             customerData:{}
 
             },
-            updateOrder:{}
+            dataOrder:{}
         }
     },
     methods:{
         getOrder(){
             this.loading = true
-            this.$axios.get(`/webservices/order/${this.orderData.id}`)
+            this.$axios.get(`/webservices/order/${this.orderData.storeId}/${this.orderData.id}`)
                 .then((data)=>{
                     this.loading = false
                     this.order = data.data
+                    this.dataOrder = this.order.extra
                 })
+        },
+        updateOrder() {
+          this.$axios.post(`/webservices/order/update/${this.orderData.id}`, {
+            data:{
+              ...this.dataOrder,
+              order_id:this.orderData.id
+            }
+          })
+            .then((data) => {
+              this.$emit('input', false)
+              this.$emit('update')
+            })
         }
     },
     watch:{

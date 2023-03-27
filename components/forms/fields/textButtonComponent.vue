@@ -1,10 +1,10 @@
 <template>
   <div class="fill-width">
     <v-input v-bind="$attrs['class']" class="fill-width d-flex flex-column fill-width" hide-details>
-      <v-text-field solo class="rounded-lg rounded-r-0 font-weight-regular input-width" height="55" ref="input" hide-details v-model="fieldValue" v-bind="$attrs"
+      <v-text-field  solo class="rounded-lg rounded-r-0 font-weight-regular input-width" height="40" ref="input" hide-details v-model="fieldValue" v-bind="$attrs"
         @focus="checkFocus()">
       </v-text-field>
-      <v-btn class="button-width rounded-l-0 black--text rounded-lg font-weight-regular" :color="buttonColor" height="55" x-large @click="handler()">
+      <v-btn class="button-width rounded-l-0 black--text rounded-lg font-weight-regular" :color="buttonColor" height="40" x-large @click="handler()">
         {{$data["button-label"]}}&nbsp;<v-icon color="white">{{icon}}</v-icon>
       </v-btn>
     </v-input>
@@ -55,6 +55,7 @@
       handler() {
         this.$emit('click',this.fieldValue)
         this.actionSuccess = true
+        this.fieldValue = ''
       },
       checkFocus() {
         if (!this.focused) {

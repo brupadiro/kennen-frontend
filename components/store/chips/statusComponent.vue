@@ -41,7 +41,7 @@
             return "Cancelado por el administrador";
             break;
           case "8":
-            return "Producto(s) pendiente(s) de suministro por parte del proveedor";
+            return "Producto(s) pendiente(s)";
             break;
           case "9":
             return "Devolución";

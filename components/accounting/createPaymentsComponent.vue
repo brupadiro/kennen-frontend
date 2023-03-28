@@ -20,6 +20,10 @@
               </formsFieldsSelectComponent>
             </v-col>
             <v-col class="col-12">
+              <formsFieldsTextComponent v-model="payment.date"  type="date" label="Fecha">
+              </formsFieldsTextComponent>
+            </v-col>
+            <v-col class="col-12">
               <FormsFieldsSelectComponent v-model="payment.status" label="Estado" :items="[
                 {text:'Pagado',value:'payed',},
                 {text:'Pendiente',value:'pending'}
@@ -116,6 +120,7 @@
       }
     },
     created() {
+      this.payment.date = new Date().toISOString().substr(0, 10)
       this.getStores()
     },
     methods: {
@@ -143,7 +148,7 @@
           amount: 0,
           comments: null,
           status: 'payed',
-          store: null
+          store: this.payment.store
         }
             this.$emit('input', false)
             this.$root.$emit('refresh')

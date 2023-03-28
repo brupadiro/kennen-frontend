@@ -52,6 +52,10 @@
         <template v-slot:item.cost="{ item }">
           € {{ item.cost }}
         </template>
+        <template v-slot:item.product.image_url="{ item }">
+          <img :src="item.product.image_url" width="100%" height="80">
+        </template>
+
         <!--
           <template v-slot:item.tracking_number="{ item }">
             {{ item.extra.tracking_number }}
@@ -74,22 +78,21 @@
         </template>
         <template v-slot:item.product.tracking_number="{ item }">
 
-          <v-edit-dialog :return-value.sync="item.product.tracking_number" save-text="Guardar" cancel-text="Guardar"
+          <v-edit-dialog  @close="updateTrackingOrder(item)" save-text="Guardar" cancel-text="Guardar"
             @save="updateTrackingOrder(item)">
             <v-text-field hide-details outlined dense height="20" readonly
               :value="setValue('#',item.product.tracking_number)"></v-text-field>
             <template v-slot:input>
-              <v-text-field v-model="item.product.tracking_number" label="Edit"
-                @keydown.enter="updateTrackingOrder(item)"></v-text-field>
+              <v-text-field v-model="item.product.tracking_number" label="Edit"></v-text-field>
             </template>
           </v-edit-dialog>
         </template>
         <template v-slot:item.product.net_price="{ item }">
-          <v-edit-dialog :return-value.sync="item.product.net_price">
+          <v-edit-dialog @close="updateTrackingOrder(item)">
             <v-text-field hide-details outlined dense height="20" readonly
-              :value="setValue('$',item.product.net_price)"></v-text-field>
+              :value="setValue('€',item.product.net_price)"></v-text-field>
             <template v-slot:input>
-              <v-text-field v-model="item.product.net_price" @keydown.enter="updateTrackingOrder(item)" label="Edit"
+              <v-text-field v-model="item.product.net_price" label="Edit"
                 counter></v-text-field>
             </template>
           </v-edit-dialog>
@@ -265,6 +268,14 @@
             visible: true,
           },
           {
+            align: 'left',
+            text: 'Product IMG',
+            value: 'product.image_url',
+            align: 'left',
+            visible:true,
+         },
+
+          {
             text: 'Tracking',
             value: 'product.tracking_number',
             align: 'left',
@@ -286,14 +297,14 @@
           },
           {
             text: 'TotalPrice',
-            value: 'order.total_paid',
+            value: 'product.price',
             align: 'left',
             visible: true,
           },
 
         ],
         headerIncidences: [{
-          text: 'Incidencia',
+          text: 'Contenido',
           value: 'incidence',
           align: 'left',
         }, ],
@@ -321,11 +332,6 @@
       },
       getStore() {
         this.loading = true
-        this.data = {
-          orders: [],
-          total_pages: 0,
-          total_count:0
-        }
         this.$axios.get(`/webservices/orderList/${this.store.id}`, {
             params: this.search
           })
@@ -358,18 +364,19 @@
               }
         try {
           if (order.product.extra_id) {
-            this.$axios.put(`/orders/${order.product.extra_id}`, {
+            await this.$axios.put(`/orders/${order.product.extra_id}`, {
               data: data
             })
           } else {
-            this.$axios.post(`/orders/`, {
+            const {data:response} = await this.$axios.post(`/orders/`, {
               data: data
             })
-
+            const index = this.data.orders.findIndex((item)=>item.id==order.id)
+            this.$set(this.data.orders,index,{...this.data.orders[index],product:{...this.data.orders[index].product,extra_id:response.data.id}})
           }
-          if(order.product.tracking_number)
+          if(order.product.tracking_number && order.product.tracking_number.length>6)
             this.$axios.post('/orders/tracking',data)
-          this.getStore()
+            
         } catch (e) {
           console.log(e)
         }

@@ -107,7 +107,7 @@
           params: {
             filters: {
               store: this.search.store,
-              createdAt: {
+              date: {
                 $gte: this.search.start_date,
                 $lte: this.search.end_date
               }
@@ -127,7 +127,7 @@
         console.log(paymentsData)
         // Grouping payment data by date using reduce function
         const grouped = paymentsData.reduce((acc, obj) => {
-          const date = moment(obj.publishedAt).format('DD/MM/YYYY');
+          const date = moment(obj.date).format('DD/MM/YYYY');
           (acc[date] || (acc[date] = [])).push(obj);
           return acc;
         }, {});

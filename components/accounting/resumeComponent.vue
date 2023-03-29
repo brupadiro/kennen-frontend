@@ -72,7 +72,7 @@
             <v-icon v-else color="white">mdi-window-maximize</v-icon>
           </v-btn>
         </GeneralCardTitleComponent>
-        <v-data-table :headers="headersExpanded" :items="paymentsExpandData" items-per-page="-1" hide-default-footer>
+        <v-data-table :headers="headersExpanded" :items="paymentsExpandData" :items-per-page="-1" hide-default-footer>
           <template v-slot:item.FACTURACION="{ item }">
             {{ item.FACTURACION.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
           </template>

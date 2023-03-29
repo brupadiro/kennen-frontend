@@ -19,7 +19,7 @@
 
     </v-data-table>
     <v-snackbar color="success" class="black--text" v-model="incidenceSnackBar">
-      Pago eliminado correctamente
+      Incidencia eliminada correctamente
     </v-snackbar>
 
   </v-card>

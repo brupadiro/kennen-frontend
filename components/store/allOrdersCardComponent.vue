@@ -83,20 +83,7 @@
 
         <template v-slot:expanded-item="{ headers, item }">
           <td :colspan="headers.length" class="pa-4">
-            <v-card outlined width="100%">
-              <v-card-title>
-                <v-row>
-                  <v-col class="col-md-4 col-12">Incidencias</v-col>
-                  <v-col class="col-md-8 col-12">
-                    <FormsFieldsTextButtonComponent dense notification-text="Incidencia agregada"
-                      @click="addIncidences($event,item)" label="Agregar incidencia"></FormsFieldsTextButtonComponent>
-                  </v-col>
-                </v-row>
-              </v-card-title>
-              <v-divider></v-divider>
-              <v-data-table dense hide-default-footer :items="item.product.incidences" :headers="headerIncidences">
-              </v-data-table>
-            </v-card>
+            <ordersIncidencesComponent :store="item.storeId" :order="item" @refresh="getAllOrders()"></ordersIncidencesComponent>
           </td>
         </template>
       </v-data-table>
@@ -284,11 +271,6 @@
           },
 
         ],
-        headerIncidences: [{
-          text: 'Contenido',
-          value: 'incidence',
-          align: 'left',
-        }, ],
         loading: false,
         data: {
           orders: [],
@@ -373,89 +355,8 @@
         } catch (e) {
           console.log(e)
         }
-        this.updateTrackingProduct = {}
-      },
-      async addIncidences(incidence, order) {
-        console.log(order)
-        try {
-          if (order.product.extra_id) {
-            await this.$axios.put(`/orders/${order.product.extra_id}`, {
-              params: {
-                populate: '*'
-              },
-              data: {
-                product_id: order.product.id,
-                store_id: order.storeId,
-                order_id: order.order.id,
-                incidences: [
-                  ...order.product.incidences,
-                  {
-                    incidence: incidence
-                  }
-                ]
-              }
-            })
-          } else {
-            await this.$axios.post(`/orders/`, {
-              params: {
-                populate: '*'
-              },
-              data: {
-                product_id: order.product.id,
-                store_id: this.store.id,
-                order_id: order.order.id,
-                incidences: [{
-                  incidence: incidence
-                }]
-              }
-            })
-
-          }
-          this.getAllOrders()
-        } catch (e) {
-          console.log(e)
-        }
-        this.updateTrackingProduct = {}
       },
 
-
-
-      cleanProduct() {
-        this.updateTrackingProduct = {}
-      },
-      checkSelectedProduct(order, product) {
-        if (this.updateTrackingProduct.order_id === order.order.id && this.updateTrackingProduct.product_id === product
-          .item.id) {
-          return true
-        } else {
-          return false
-        }
-      },
-      exportTable() {
-        // naive encoding to csv format
-        const content = [this.columns.map(col => wrapCsvValue(col.text))].concat(
-          this.data.map(row => this.columns.map(col => wrapCsvValue(
-            typeof col.value === 'function' ?
-            col.value(row) :
-            row[col.value === void 0 ? col.text : col.value],
-            col.format
-          )).join(','))
-        ).join('\r\n')
-
-        const status = exportFile(
-          'activity.csv',
-          content,
-          'text/csv'
-        )
-
-        if (status !== true) {
-          this.$q.notify({
-            message: 'Browser denied file download...',
-            color: 'negative',
-            icon: 'warning'
-          })
-        }
-      },
     },
     computed: {
       filteredColumns() {

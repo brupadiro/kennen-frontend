@@ -103,6 +103,13 @@
           <template v-slot:item.TOTAL_GASTOS="{ item }">
             {{ item.TOTAL_GASTOS.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
           </template>
+          <template v-slot:item.id="{ item }">
+            <v-btn fab small rounded color="red" elevation="3" @click="deletePayment(item.id)" class="my-3">
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+          </template>
+
+
         </v-data-table>
         <v-card-subtitle class="primary py-0">
           <v-list dense color="transparent">
@@ -122,6 +129,9 @@
       </GeneralCardComponent>
 
     </v-dialog>
+    <v-snackbar color="success" class="black--text" v-model="paymentSnack">
+      Pago eliminado correctamente
+    </v-snackbar>
   </div>
 
 </template>
@@ -144,6 +154,7 @@
           start: moment().startOf('month').format('YYYY-MM-DD'),
           end: moment().endOf('month').format('YYYY-MM-DD')
         },
+        paymentSnack: false,
         headersExpanded: [{
           text:'Fecha',
           value:'date'
@@ -183,6 +194,10 @@
           {
             text: 'EXTRAS',
             value: 'EXTRAS'
+          },
+          {
+            text: 'ELIMINAR',
+            value: 'id'
           },
 
 
@@ -348,6 +363,7 @@
         // Crear un objeto vacío para almacenar los datos formateados
         const formattedData = values.map(item => {
           return {
+            id: item.id,
             date: item.date,
             FACTURACION: item.type === 'FACTURACION' ? item.amount : 0,
             COMISION: item.type === 'COMISION' ? item.amount : 0,
@@ -365,6 +381,18 @@
         // Devolver los datos formateados
         return formattedData;
       },
+      deletePayment(id) {
+        this.$axios.delete(`/payments/${id}`)
+          .then(() => {
+            this.paymentSnack = true;
+            this.paymentsExpandData = this.paymentsExpandData.filter(item => item.id !== id);
+            this.$root.$emit('refresh');
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      },
+
     },
     computed: {
       resumeIncomes() {

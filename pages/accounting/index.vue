@@ -22,7 +22,7 @@
               <v-col class="col-12 col-md-10">
                 <v-row>
               <v-col class="col-md-12 col-12">
-            <FormsFieldsSelectComponent  v-model="search.store" return-object :items="storeList.data" item-value="id" item-text="name" label="Tienda">
+            <FormsFieldsSelectComponent  v-model="search.store" :items="storeList.data" item-value="id" item-text="name" label="Tienda">
             </FormsFieldsSelectComponent>
           </v-col>
 

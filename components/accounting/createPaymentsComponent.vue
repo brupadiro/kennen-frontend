@@ -31,7 +31,7 @@
               </FormsFieldsSelectComponent>
             </v-col>
             <v-col class="col-md-12 col-12">
-              <formsFieldsTextComponent prepend-inner-icon="mdi-currency-usd" type="number" v-model="payment.amount"
+              <formsFieldsTextComponent prepend-inner-icon="mdi-currency-eur" type="number" v-model="payment.amount"
                 label="Valor">
               </formsFieldsTextComponent>
             </v-col>
@@ -146,6 +146,7 @@
             this.payment ={
           type: 'COMISION',
           amount: 0,
+          date:new Date().toISOString().substr(0, 10),
           comments: null,
           status: 'payed',
           store: this.payment.store

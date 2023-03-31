@@ -17,6 +17,11 @@ export default {
           to: '/accounting'
         },
         {
+          icon: 'error',
+          title: 'Incidencias',
+          to: '/incidents'
+        },
+        {
           icon: 'account',
           title: 'Clientes',
           to: '/clients'

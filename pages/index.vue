@@ -19,6 +19,7 @@
             </GeneralCardComponent>          
           </v-col>
           <v-col class="col-12">
+            <StoreAllOrdersCardComponent></StoreAllOrdersCardComponent>
           </v-col>
         </v-row>
 

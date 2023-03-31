@@ -22,7 +22,7 @@
                   <formsFieldsTextComponent v-model="user.email" label="Email"></formsFieldsTextComponent>
                 </v-col>
                 <v-col class="col-12">
-                  <formsFieldsTextComponent v-model="user.password" label="Password"></formsFieldsTextComponent>
+                  <formsFieldsTextComponent v-model="user.password" label="Contraseña"></formsFieldsTextComponent>
                 </v-col>
               </v-row>
             </v-card-text>

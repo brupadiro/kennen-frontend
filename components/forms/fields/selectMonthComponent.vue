@@ -33,7 +33,7 @@
           const today = moment();
           const month = today.add(this.selectedMonth, 'month')
           const startDate = month.clone().startOf('month').format('YYYY-MM-DD');
-          const endDate = month.clone().endOf('month').format('YYYY-MM-DD');
+          const endDate = month.clone().endOf('month').add(1, 'day').format('YYYY-MM-DD');
           this.$emit('dateUpdated', {start_date:startDate, end_date:endDate});
         }
       }

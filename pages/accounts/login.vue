@@ -37,7 +37,7 @@
                       </v-col>
                       <v-col class="col-12">
                         <formsFieldsPasswordComponent v-model="user.password" :rules="rules.required"
-                          label-color="white--text" label="Password" required>
+                          label-color="white--text" label="Contraseña" required>
                         </formsFieldsPasswordComponent>
                       </v-col>
                     </v-row>

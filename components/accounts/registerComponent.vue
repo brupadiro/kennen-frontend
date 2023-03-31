@@ -17,7 +17,7 @@
           </FormsFieldsTextComponent>
         </v-col>
         <v-col class="col-12">
-          <FormsFieldsTextComponent type="password" label-color="white--text" v-model="user.password" label="Password"
+          <FormsFieldsTextComponent type="password" label-color="white--text" v-model="user.password" label="Contraseña"
             :rules="rules.required"></FormsFieldsTextComponent>
         </v-col>
         <v-col class="col-12">

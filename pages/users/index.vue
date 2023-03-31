@@ -51,7 +51,7 @@
               </v-col>
               <v-col class="col-md-12">
                 <formsFieldsTextComponent v-model="user.password" type="password" :rules="rules.required"
-                  label="Password">
+                  label="Contraseña">
                 </formsFieldsTextComponent>
               </v-col>
 

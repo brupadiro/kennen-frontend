@@ -73,40 +73,17 @@
           </v-btn>
         </GeneralCardTitleComponent>
         <v-data-table :headers="headersExpanded" :items="paymentsExpandData" :items-per-page="-1" hide-default-footer>
-          <template v-slot:item.FACTURACION="{ item }">
-            {{ item.FACTURACION.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
+          <template v-slot:item.type="{ item }">
+            {{ formatType(item.type) }}
           </template>
-          <template v-slot:item.COMISION="{ item }">
-            {{ item.COMISION.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
-          </template>
-          <template v-slot:item.PUBLI="{ item }">
-            {{ item.PUBLI.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
-          </template>
-          <template v-slot:item.SERVER="{ item }">
-            {{ item.SERVER.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
-          </template>
-          <template v-slot:item.REEMBOLSOS="{ item }">
-            {{ item.REEMBOLSOS.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
-          </template>
-          <template v-slot:item.PAGOS_CHINO="{ item }">
-            {{ item.PAGOS_CHINO.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
-          </template>
-          <template v-slot:item.AT_CLIENTE="{ item }">
-            {{ item.AT_CLIENTE.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
-          </template>
-          <template v-slot:item.ABOGADA="{ item }">
-            {{ item.ABOGADA.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
-          </template>
-          <template v-slot:item.EXTRAS="{ item }">
-            {{ item.EXTRAS.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
-          </template>
-          <template v-slot:item.TOTAL_GASTOS="{ item }">
-            {{ item.TOTAL_GASTOS.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
+
+          <template v-slot:item.amount="{ item }">
+            {{ item.amount.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
           </template>
           <template v-slot:item.id="{ item }">
             <v-btn fab small rounded color="red" elevation="3" @click="deletePayment(item.id)" class="my-3">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
           </template>
 
 
@@ -156,48 +133,26 @@
         },
         paymentSnack: false,
         headersExpanded: [{
-          text:'Fecha',
-          value:'date'
-        },{
-            text: 'FACTURACION',
-            value: 'FACTURACION'
+            text: 'Fecha',
+            value: 'date'
+          }, {
+            text: 'TIPO',
+            value: 'type'
           },
           {
-            text: 'COMISION',
-            value: 'COMISION'
+            text: 'MONTO',
+            value: 'amount'
           },
           {
-            text: 'PUBLI',
-            value: 'PUBLI'
-          },
-          {
-            text: 'SERVER',
-            value: 'SERVER'
-          },
-          {
-            text: 'REEMBOLSOS',
-            value: 'REEMBOLSOS'
-          },
-          {
-            text: 'PAGOS CHINO',
-            value: 'PAGOS_CHINO'
+            text: 'COMENTARIOS',
+            value: 'comments'
           },
 
+
           {
-            text: 'AT.CLIENTE',
-            value: 'AT_CLIENTE'
-          },
-          {
-            text: 'ABOGADA',
-            value: 'ABOGADA'
-          },
-          {
-            text: 'EXTRAS',
-            value: 'EXTRAS'
-          },
-          {
-            text: 'ELIMINAR',
-            value: 'id'
+            text: '',
+            value: 'id',
+            align: 'right'
           },
 
 
@@ -262,12 +217,36 @@
     },
     created() {
       this.$root.$on('refresh', (data) => {
-        console.log(this.search)
         this.getPayments();
       })
 
     },
     methods: {
+      formatType(value) {
+        switch (value) {
+          case 'FACTURACION':
+            return 'FACTURACION';
+          case 'COMISION':
+            return 'COMISION';
+          case 'PUBLI':
+            return 'PUBLI';
+          case 'SERVER':
+            return 'SERVER';
+          case 'REEMBOLSOS':
+            return 'REEMBOLSOS';
+          case 'PAGOS_CHINO':
+            return 'PAGOS CHINO';
+          case 'AT_CLIENTE':
+            return 'AT.CLIENTE';
+          case 'ABOGADA':
+            return 'ABOGADA';
+          case 'EXTRAS':
+            return 'EXTRAS';
+          default:
+            return '';
+        }
+
+      },
       async getIncomeData() {
         const {
           data: data
@@ -325,7 +304,7 @@
           }]
         } else {
           this.data = await this.groupedByType(data.data, incomes);
-          this.paymentsExpandData = this.groupedByTypeExpanded(data.data);
+          this.paymentsExpandData = data.data
         }
       },
       async groupedByType(values, incomes) {

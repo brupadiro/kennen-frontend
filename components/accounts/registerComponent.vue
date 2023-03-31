@@ -60,6 +60,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     data() {
       return {
@@ -89,7 +90,7 @@
         if (this.$refs.form.validate()) {
           this.loading = true
 
-          this.$axios.post('/companies', {
+          axios.post('https://kennen.codiq.net/api/companies', {
             data:this.company
           })
             .then(response => {

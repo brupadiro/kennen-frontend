@@ -89,8 +89,7 @@
       register() {
         if (this.$refs.form.validate()) {
           this.loading = true
-
-          axios.post('https://kennen.codiq.net/api/companies', {
+          this.$axios.post('/companies', {
             data:this.company
           })
             .then(response => {

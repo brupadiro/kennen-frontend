@@ -77,7 +77,7 @@ export const actions = {
     try {
       const {
         data: data
-      } = await axios.post('https://kennen.codiq.net/auth/local/register', {
+      } = await this.$axios.post('/auth/local/register', {
         ...user,
       })
       return {

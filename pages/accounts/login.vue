@@ -90,12 +90,13 @@
         },
       }),
 
-
+      created() {
+        this.$auth.logout()
+      },
       methods: {
         async login() {
           if (!this.$refs.form.validate()) return
           this.loading = true
-          console.log(this.$auth)
           this.$store.dispatch('users/login', this.user)
             .then(() => {
               this.loading = false

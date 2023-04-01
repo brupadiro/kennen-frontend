@@ -3,38 +3,46 @@
     <generalCardTitleComponent class="primary white--text">Todos los pedidos</generalCardTitleComponent>
     <v-divider></v-divider>
     <v-card-title>
-      <v-row>
-        <v-col class="col-md-11 col-12">
+      <v-card outlined class="rounded-lg">
+        <v-card-title>
+
           <v-row>
-            <v-col cols="12" md="6">
-              <FormsFieldsTextComponent v-model="search.customer" placeholder="Cliente"></FormsFieldsTextComponent>
-            </v-col>
-            <v-col cols="12" md="6">
-              <FormsFieldsTextComponent v-model="search.product" placeholder="Producto"></FormsFieldsTextComponent>
-            </v-col>
-            <v-col cols="12" md="6">
-              <FormsFieldsTextComponent v-model="search.startDate" type="date" placeholder="Fecha inicio">
-              </FormsFieldsTextComponent>
-            </v-col>
-            <v-col cols="12" md="6">
-              <FormsFieldsTextComponent v-model="search.endDate" type="date" placeholder="Fecha fin">
-              </FormsFieldsTextComponent>
-            </v-col>
-            <v-col cols="12" md="12">
-              <FormsFieldsSelectComponent :items="stateItems" v-model=search.state label="Estado">
-              </FormsFieldsSelectComponent>
-            </v-col>
+            <v-col class="col-md-11 col-12">
+              <v-row>
+                <v-col class="col-md-2 col-12">
+                  <FormsFieldsTextComponent v-model="search.customer" label="Cliente"></FormsFieldsTextComponent>
+                </v-col>
+                <v-col class="col-md-2 col-12">
+                  <FormsFieldsTextComponent v-model="search.product" label="Producto"></FormsFieldsTextComponent>
+                </v-col>
+                <v-col class="col-md-2 col-12">
+                  <FormsFieldsTextComponent v-model="search.reference" label="Referencia">
+                  </FormsFieldsTextComponent>
+                </v-col>
+                <v-col class="col-md-2 col-12">
+                  <FormsFieldsTextComponent v-model="search.startDate" type="date" label="Fecha inicio">
+                  </FormsFieldsTextComponent>
+                </v-col>
+                <v-col class="col-md-2 col-12">
+                  <FormsFieldsTextComponent v-model="search.endDate" type="date" label="Fecha fin">
+                  </FormsFieldsTextComponent>
+                </v-col>
+                <v-col class="col-md-2 col-12">
+                  <FormsFieldsSelectComponent :items="stateItems" v-model=search.state label="Estado">
+                  </FormsFieldsSelectComponent>
+                </v-col>
 
+              </v-row>
+
+            </v-col>
+            <v-col class="col-md-1 col-12 d-flex justify-center align-center">
+              <v-btn fab class="primary white--text mt-4" @click="getAllOrders()">
+                <v-icon>mdi-filter</v-icon>
+              </v-btn>
+            </v-col>
           </v-row>
-
-
-        </v-col>
-        <v-col class="col-md-1 col-12 d-flex justify-center align-center">
-          <v-btn fab class="primary white--text" @click="getAllOrders()">
-            <v-icon>mdi-filter</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
+        </v-card-title>
+      </v-card>
     </v-card-title>
     <v-card-title>
       <v-card outlined>

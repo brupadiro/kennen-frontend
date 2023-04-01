@@ -5,7 +5,7 @@
         Inicio
       </template>
       <template v-slot:subtitle>
-        <v-btn color="secondary" class="font-weight-bold black--text rounded-lg" @click="modalShop=true">Agregar tienda</v-btn>
+        <v-btn color="secondary" v-if="$auth.user.type=='admin'" class="font-weight-bold black--text rounded-lg" @click="modalShop=true">Agregar tienda</v-btn>
         </template>
     </HeadersGeneralComponent>
     <v-row>

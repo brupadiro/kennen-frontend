@@ -12,6 +12,11 @@ export default {
           to: '/orders'
         },
         {
+          icon: 'error',
+          title: 'Incidencias',
+          to: '/incidents'
+        },
+        {
           icon: 'numbers',
           title: 'Contabilidad',
           to: '/accounting'

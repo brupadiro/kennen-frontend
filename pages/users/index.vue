@@ -50,6 +50,11 @@
                 </formsFieldsTextComponent>
               </v-col>
               <v-col class="col-md-12">
+                <FormsFieldsSelectComponent v-model="user.type" :rules="rules.required" label="Tipo" :items="itemsUserType">
+                </FormsFieldsSelectComponent>
+              </v-col>
+
+              <v-col class="col-md-12">
                 <formsFieldsTextComponent v-model="user.password" type="password" :rules="rules.required"
                   label="Contraseña">
                 </formsFieldsTextComponent>
@@ -87,9 +92,19 @@
           text: 'Email',
           value: 'email'
         }, {
+          text: 'Tipo',
+          value: 'type',
+        }, {
           text: 'Fecha de alta',
           value: 'createdAt',
           align: 'center'
+        }],
+        itemsUserType: [{
+          text: 'Administrador',
+          value: 'admin'
+        }, {
+          text: 'Proveedor',
+          value: 'Provider'
         }],
         search: {
           pagination: {
@@ -101,7 +116,9 @@
           number: (value) => value.match(/^[0-9]*$/) || 'Este campo solo acepta numeros'
         },
         snackErrorForm: false,
-        user:{},
+        user:{
+          type:'Admin'
+        },
         loading: false,
         users: [],
         modalUsers: false,

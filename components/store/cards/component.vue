@@ -232,13 +232,17 @@
             align: 'left',
             visible: true,
           },
-
-
           {
             text: 'Status',
             value: 'order.status',
             align: 'left',
             visible: true,
+          },
+          {
+            text: 'Address',
+            value: 'delivery_address.address1',
+            align: 'left',
+            visible: false,
           },
           {
             text: 'City',

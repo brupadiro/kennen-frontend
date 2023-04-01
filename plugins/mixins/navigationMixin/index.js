@@ -1,15 +1,22 @@
 import adminMixin from './admin.js'
-import userMixin from './user.js'
-import staffMixin from './staff.js'
+import providerMixin from './provider.js'
 export default {
-  mixins: [adminMixin, userMixin,staffMixin],
+  mixins: [adminMixin, providerMixin],
   computed: {
     items() {
-      return this.adminItems
+      if(this.$auth.user.type == 'Provider') {
+        return this.providerItems
+      } else {
+        return this.adminItems
+      }
     },
     bottomItems() {
+      if(this.$auth.user.type == 'Provider') {
+        return this.providerItems
+      } else {
+        return this.bottomAdminItems
+      }
 
-      return this.bottomAdminItems
     }
   }
 }

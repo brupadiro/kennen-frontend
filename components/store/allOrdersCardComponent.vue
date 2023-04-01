@@ -209,6 +209,12 @@
             visible: true,
           },
           {
+            text: 'Address',
+            value: 'delivery_address.address1',
+            align: 'left',
+            visible: false,
+          },
+          {
             text: 'City',
             value: 'delivery_address.city',
             align: 'left',

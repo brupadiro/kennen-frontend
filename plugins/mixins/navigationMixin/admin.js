@@ -17,11 +17,6 @@ export default {
           to: '/accounting'
         },
         {
-          icon: 'error',
-          title: 'Incidencias',
-          to: '/incidents'
-        },
-        {
           icon: 'account',
           title: 'Clientes',
           to: '/clients'
@@ -31,8 +26,6 @@ export default {
           title: 'Usuarios',
           to: '/users'
         },
-
-
         {
           icon: 'person',
           title: 'Mi perfil',
@@ -63,6 +56,10 @@ export default {
           icon: 'more',
           title: 'More',
           subItems: [{
+            icon: 'error',
+            title: 'Incidencias',
+            to: '/incidents'
+          },{
             icon: 'person',
             title: 'Mi perfil',
             to: '/profile'

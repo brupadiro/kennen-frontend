@@ -203,6 +203,14 @@
           },
           {
             align: 'left',
+            text: 'Phone',
+            value: 'customer.phone',
+            align: 'left',
+            visible: false,
+          },
+
+          {
+            align: 'left',
             text: 'Date',
             value: 'order.date_add',
             align: 'left',

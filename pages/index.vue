@@ -9,8 +9,8 @@
         </template>
     </HeadersGeneralComponent>
     <v-row>
-          <v-col class="col-md-12"  v-for="store in stores.data" :key="store.id">
-            <storeCardsComponent :store="store"></storeCardsComponent>
+          <v-col class="col-md-4"  v-for="store in stores.data" :key="store.id">
+            <storeCardsSmallComponent :store="store"></storeCardsSmallComponent>
           </v-col>
           <v-col class="col-md-4" v-if="stores.data.length == 0">
             <GeneralCardComponent v-ripple @click.native="modalShop=true" height="400" class="d-flex justify-center align-center flex-column">

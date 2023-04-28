@@ -88,6 +88,11 @@
         <template v-slot:item.product.image_url="{ item }">
           <img :src="item.product.image_url" width="100%" height="80">
         </template>
+        <template v-slot:item.copy="{ item }">
+          <v-btn rounded color="primary" @click="copyToClipboard(item)">
+            <v-icon>mdi-content-copy</v-icon>
+          </v-btn>
+        </template>
 
         <template v-slot:expanded-item="{ headers, item }">
           <td :colspan="headers.length" class="pa-4">
@@ -100,7 +105,7 @@
     <v-card-actions class="d-flex justify-center">
       <v-pagination v-model="search.page" :length="data.total_pages" circle></v-pagination>
     </v-card-actions>
-
+    <v-snackbar v-model="copyOrderSnackbar">Success to copy!</v-snackbar>
   </GeneralCardComponent>
 </template>
 
@@ -291,9 +296,17 @@
             align: 'left',
             visible: true,
           },
+          {
+            text: 'Copy order',
+            value: 'copy',
+            align: 'left',
+            visible: true,
+          },
+
 
         ],
         loading: false,
+        copyOrderSnackbar: false,
         data: {
           orders: [],
           total_pages: 0,
@@ -341,6 +354,23 @@
           order_id: order.order.id,
           product_id: product.item.id,
         }
+      },
+      copyToClipboard(item) {
+        const el = document.createElement('textarea');
+
+        let size = item.product.name.split(':')[1]
+        el.value = `Name:${item.customer.name}
+Phone:${item.customer.phone}
+Address:${item.delivery_address.address1}
+City:${item.delivery_address.city}
+State:${item.delivery_address.state} 
+Size:${size}
+Postcode:${item.delivery_address.postcode}`;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        this.copyOrderSnackbar = true
       },
       async updateTrackingOrder(order) {
         const data = {

@@ -2,7 +2,7 @@
     <GeneralCardComponent class="mx-auto">
       <generalCardTitleComponent class="primary white--text">{{ store.name }}</generalCardTitleComponent>
       <v-divider></v-divider>
-      <v-card-text>
+      <v-card-text class="small-card-container">
         <v-data-table item-key="id" show-expand single-expand :loading="loading" loading-text="Cargando ordenes"
           disable-pagination disable-sort calculate-widths disable-filtering :items="data.orders"
           :headers="filteredColumns" hide-default-footer :items-per-page="10">
@@ -262,4 +262,10 @@
     }
   
   </script>
-  
+  <style scoped>
+  .small-card-container{
+    height: 500px;
+    overflow-x: auto;
+
+  }
+  </style>

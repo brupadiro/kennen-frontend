@@ -364,6 +364,7 @@ Phone:${item.customer.phone}
 Address:${item.delivery_address.address1}
 City:${item.delivery_address.city}
 State:${item.delivery_address.state} 
+Country:${item.delivery_address.country} 
 Size:${size}
 Postcode:${item.delivery_address.postcode}`;
         document.body.appendChild(el);

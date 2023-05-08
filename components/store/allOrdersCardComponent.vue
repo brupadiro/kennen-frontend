@@ -63,6 +63,9 @@
         <template v-slot:item.cost="{ item }">
           € {{ item.cost }}
         </template>
+        <template v-slot:item.delivery_address.address1="{ item }">
+           {{ item.delivery_address | delivery_address }}
+        </template>
 
         <template v-slot:item.order.status="{ item }">
           <storeChipsStatusComponent :status="item.order.status"></storeChipsStatusComponent>
@@ -113,6 +116,11 @@
   import dateFunctions from '~/plugins/mixins/dateFunctions';
   import moment from 'moment'
   export default {
+    filters:{
+      delivery_address: function (value) {
+        return (value.address1 !=" ") ? value.address1 : value.address2 
+      }
+    },
     mixins: [dateFunctions],
     name: 'storeCardComponent',
     data() {
@@ -361,7 +369,7 @@
         let size = item.product.name.split(':')[1]
         el.value = `Name:${item.customer.name}
 Phone:${item.customer.phone}
-Address:${item.delivery_address.address1}
+Address:${(item.delivery_address.address1 !=" ") ? item.delivery_address.address1 : item.delivery_address.address2 }
 City:${item.delivery_address.city}
 State:${item.delivery_address.state} 
 Country:${item.delivery_address.country} 

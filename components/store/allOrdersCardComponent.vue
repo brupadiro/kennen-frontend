@@ -66,6 +66,9 @@
         <template v-slot:item.delivery_address.address1="{ item }">
            {{ item.delivery_address | delivery_address }}
         </template>
+        <template v-slot:item.profit="{ item }">
+           {{ calcProfit(item) }}
+        </template>
 
         <template v-slot:item.order.status="{ item }">
           <storeChipsStatusComponent :status="item.order.status"></storeChipsStatusComponent>
@@ -115,13 +118,16 @@
 <script>
   import dateFunctions from '~/plugins/mixins/dateFunctions';
   import moment from 'moment'
-  export default {
+  import columnsMixin from '~/plugins/mixins/columnsMixin';
+  import stateMixin from '~/plugins/mixins/stateMixins';
+import storeMixin from '~/plugins/mixins/storeMixin';
+export default {
     filters:{
       delivery_address: function (value) {
         return (value.address1 !=" ") ? value.address1 : value.address2 
       }
     },
-    mixins: [dateFunctions],
+    mixins: [dateFunctions,columnsMixin,stateMixin,storeMixin],
     name: 'storeCardComponent',
     data() {
       return {
@@ -135,184 +141,6 @@
           page: 1,
           state: "2"
         },
-        stateItems: [{
-            value: "0",
-            text: "En espera de pago"
-          },
-          {
-            value: "2",
-            text: "Pago aceptado"
-          },
-          {
-            value: "1",
-            text: "Preparación en curso"
-          },
-          {
-            value: "3",
-            text: "En espera de envío"
-          },
-          {
-            value: "4",
-            text: "Enviado"
-          },
-          {
-            value: "5",
-            text: "Entregado"
-          },
-          {
-            value: "6",
-            text: "Cancelado por el cliente"
-          },
-          {
-            value: "7",
-            text: "Cancelado por el administrador"
-          },
-          {
-            value: "8",
-            text: "Producto(s) pendiente(s)"
-          },
-          {
-            value: "9",
-            text: "Devolución"
-          },
-          {
-            value: "10",
-            text: "Cambio"
-          },
-          {
-            value: "",
-            text: "Estado desconocido"
-          }
-        ],
-        columns: [{
-            text: 'Order ID',
-            value: 'order.id',
-            align: 'left',
-            visible: true,
-          }, {
-            text: 'Store',
-            value: 'storeName',
-            align: 'left',
-            visible: true,
-          }, {
-            text: 'Reference',
-            value: 'order.reference',
-            align: 'left',
-            visible: false,
-          },
-          {
-            align: 'left',
-            text: 'Name',
-            value: 'customer.name',
-            align: 'left',
-            visible: true,
-          },
-          {
-            align: 'left',
-            text: 'Email',
-            value: 'customer.email',
-            align: 'left',
-            visible: false,
-          },
-          {
-            align: 'left',
-            text: 'Phone',
-            value: 'customer.phone',
-            align: 'left',
-            visible: false,
-          },
-
-          {
-            align: 'left',
-            text: 'Date',
-            value: 'order.date_add',
-            align: 'left',
-            visible: true,
-          },
-
-
-          {
-            text: 'Status',
-            value: 'order.status',
-            align: 'left',
-            visible: true,
-          },
-          {
-            text: 'Address',
-            value: 'delivery_address.address1',
-            align: 'left',
-            visible: false,
-          },
-          {
-            text: 'City',
-            value: 'delivery_address.city',
-            align: 'left',
-            visible: false,
-          },
-          {
-            text: 'State',
-            value: 'delivery_address.state',
-            align: 'left',
-            visible: false,
-          },
-          {
-            text: 'Country',
-            value: 'delivery_address.country',
-            align: 'left',
-            visible: false,
-          },
-
-
-          {
-            align: 'left',
-            text: 'Producto',
-            value: 'product.name',
-            align: 'left',
-            visible: true,
-          },
-          {
-            align: 'left',
-            text: 'Product IMG',
-            value: 'product.image_url',
-            align: 'left',
-            visible: true,
-          },
-
-          {
-            text: 'Tracking',
-            value: 'product.tracking_number',
-            align: 'left',
-            visible: true,
-          },
-          {
-            text: 'Wholesale Price',
-            value: 'product.net_price',
-            align: 'left',
-            visible: true,
-          },
-
-
-          {
-            text: 'Payment',
-            value: 'order.payment',
-            align: 'left',
-            visible: false,
-          },
-          {
-            text: 'TotalPrice',
-            value: 'order.total_paid',
-            align: 'left',
-            visible: true,
-          },
-          {
-            text: 'Copy order',
-            value: 'copy',
-            align: 'left',
-            visible: true,
-          },
-
-
-        ],
         loading: false,
         copyOrderSnackbar: false,
         data: {
@@ -337,10 +165,6 @@
         this.showOrderModal = true
         console.log(this.order)
       },
-      setValue(symbol, value) {
-        if (!value) return 'Not setted'
-        return `${symbol} ${value}`
-      },
       getAllOrders() {
         this.loading = true
         this.$axios.get(`/webservices/orderListallstores/`, {
@@ -362,24 +186,6 @@
           order_id: order.order.id,
           product_id: product.item.id,
         }
-      },
-      copyToClipboard(item) {
-        const el = document.createElement('textarea');
-
-        let size = item.product.name.split(':')[1]
-        el.value = `Name:${item.customer.name}
-Phone:${item.customer.phone}
-Address:${(item.delivery_address.address1 !=" ") ? item.delivery_address.address1 : item.delivery_address.address2 }
-City:${item.delivery_address.city}
-State:${item.delivery_address.state} 
-Country:${item.delivery_address.country} 
-Size:${size}
-Postcode:${item.delivery_address.postcode}`;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-        this.copyOrderSnackbar = true
       },
       async updateTrackingOrder(order) {
         const data = {

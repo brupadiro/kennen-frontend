@@ -1,6 +1,9 @@
 <template>
   <GeneralCardComponent class="mx-auto">
-    <generalCardTitleComponent class="primary white--text">{{ store.name }}</generalCardTitleComponent>
+    <generalCardTitleComponent class="primary white--text">{{ store.name }}
+    <v-spacer></v-spacer>
+    <slot></slot>
+    </generalCardTitleComponent>
     <v-divider></v-divider>
     <v-card-title>
       <v-card outlined class="rounded-lg">
@@ -116,32 +119,42 @@
             </ordersIncidencesComponent>
           </td>
         </template>
+        <template v-slot:item.copy="{ item }">
+          <v-btn rounded color="primary" @click="copyToClipboard(item)">
+            <v-icon>mdi-content-copy</v-icon>
+          </v-btn>
+        </template>
+        <template v-slot:item.profit="{ item }">
+           {{ calcProfit(item) }}
+        </template>
+
+
       </v-data-table>
 
     </v-card-text>
     <v-card-actions class="d-flex justify-center">
       <v-pagination v-model="search.page" :length="data.total_pages" circle></v-pagination>
     </v-card-actions>
-
   </GeneralCardComponent>
 </template>
 
 <script>
   import dateFunctions from '~/plugins/mixins/dateFunctions';
   import moment from 'moment'
+  import stateMixin from '~/plugins/mixins/stateMixins';
+  import columnsMixin from '~/plugins/mixins/columnsMixin';
+  import storeMixin from '~/plugins/mixins/storeMixin';
   export default {
-    mixins: [dateFunctions],
+    mixins: [dateFunctions, stateMixin,columnsMixin,storeMixin],
     name: 'storeCardComponent',
-    props: {
-      store: {
-        type: Object,
-        required: true
+    props:{
+      store:{
+        type:Object,
+        required:true
       }
     },
     data() {
       return {
-        expanded: [],
-        mode: 'list',
         filter: '',
         pagination: {
           rowsPerPage: 10
@@ -150,209 +163,42 @@
           page: 1,
           state: "2",
         },
-        stateItems: [{
-            value: "0",
-            text: "En espera de pago"
-          },
-          {
-            value: "2",
-            text: "Pago aceptado"
-          },
-          {
-            value: "1",
-            text: "Preparación en curso"
-          },
-          {
-            value: "3",
-            text: "En espera de envío"
-          },
-          {
-            value: "4",
-            text: "Enviado"
-          },
-          {
-            value: "5",
-            text: "Entregado"
-          },
-          {
-            value: "6",
-            text: "Cancelado por el cliente"
-          },
-          {
-            value: "7",
-            text: "Cancelado por el administrador"
-          },
-          {
-            value: "8",
-            text: "Producto(s) pendiente(s)"
-          },
-          {
-            value: "9",
-            text: "Devolución"
-          },
-          {
-            value: "10",
-            text: "Cambio"
-          },
-          {
-            value: "",
-            text: "Estado desconocido"
-          }
-        ],
-
-        columns: [{
-            text: 'Order ID',
-            value: 'order.id',
-            align: 'left',
-            visible: true,
-          }, {
-            text: 'Reference',
-            value: 'order.reference',
-            align: 'left',
-            visible: false,
-          },
-          {
-            align: 'left',
-            text: 'Name',
-            value: 'customer.name',
-            align: 'left',
-            visible: true,
-          },
-          {
-            align: 'left',
-            text: 'Email',
-            value: 'customer.email',
-            align: 'left',
-            visible: false,
-          },
-          {
-            align: 'left',
-            text: 'Phone',
-            value: 'customer.phone',
-            align: 'left',
-            visible: false,
-          },
-
-
-          {
-            align: 'left',
-            text: 'Date',
-            value: 'order.date_add',
-            align: 'left',
-            visible: true,
-          },
-          {
-            text: 'Status',
-            value: 'order.status',
-            align: 'left',
-            visible: true,
-          },
-          {
-            text: 'Address',
-            value: 'delivery_address.address1',
-            align: 'left',
-            visible: false,
-          },
-          {
-            text: 'City',
-            value: 'delivery_address.city',
-            align: 'left',
-            visible: false,
-          },
-          {
-            text: 'State',
-            value: 'delivery_address.state',
-            align: 'left',
-            visible: false,
-          },
-          {
-            text: 'Country',
-            value: 'delivery_address.country',
-            align: 'left',
-            visible: false,
-          },
-
-
-          {
-            align: 'left',
-            text: 'Producto',
-            value: 'product.name',
-            align: 'left',
-            visible: true,
-          },
-          {
-            align: 'left',
-            text: 'Product IMG',
-            value: 'product.image_url',
-            align: 'left',
-            visible: true,
-          },
-
-          {
-            text: 'Tracking',
-            value: 'product.tracking_number',
-            align: 'left',
-            visible: true,
-          },
-          {
-            text: 'Wholesale Price',
-            value: 'product.net_price',
-            align: 'left',
-            visible: true,
-          },
-
-
-          {
-            text: 'Payment',
-            value: 'order.payment',
-            align: 'left',
-            visible: false,
-          },
-          {
-            text: 'TotalPrice',
-            value: 'product.price',
-            align: 'left',
-            visible: true,
-          },
-
-        ],
         loading: false,
+        order: {},
+        showOrderModal: false,
         data: {
           orders: [],
           total_pages: 0,
           total_count: 0
-        },
-        order: {},
-        showOrderModal: false,
-
+        }
       }
     },
-    mounted() {
-      this.search.startDate = moment().subtract(1, 'month').format('YYYY-MM-DD')
-      this.search.endDate = moment().format('YYYY-MM-DD')
-      this.getStore()
+    created() {
+      this.data = JSON.parse(JSON.stringify(this.$store.getters['orderstore/get']))
+      
+      this.search = JSON.parse(JSON.stringify(this.$store.getters['orderstore/getSearchParams']))
     },
     methods: {
       showOrder(item) {
         this.order = item
         this.showOrderModal = true
       },
-      getStore() {
-        this.loading = true
-        this.$axios.get(`/webservices/orderList/${this.store.id}`, {
-            params: this.search
-          })
-          .then((response) => {
-            this.loading = false
-            this.data = response.data
-          }).catch(() => {
-            this.loading = false
-          })
-      },
       setValue(symbol, value) {
         if (!value) return 'Not setted'
         return `${symbol} ${value}`
       },
+      async getStore() {
+        this.data = 
+          this.loading = true
+          this.data = await this.$store.dispatch('orderstore/findAll',{
+            storeId: this.store.id,
+            search:this.search
+          })
+          console.log(this.data)
+          this.loading = false
+        },
+
+
       async updateTrackingOrder(order) {
         const data = {
           product_id: order.product.id,
